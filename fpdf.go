@@ -2747,7 +2747,7 @@ func (f *Fpdf) MultiCell(w, h float64, txtStr, borderStr, alignStr string, fill 
 				} else {
 					f.CellFormat(w, h, s[j:sep], b, 2, alignStr, fill, 0, "")
 				}
-				i = sep + 1
+				i = sep
 			}
 			sep = -1
 			j = i
