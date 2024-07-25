@@ -6,7 +6,7 @@ Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/jung-kurt/gofpdf/master/LICENSE)
 [![GoDoc](https://img.shields.io/badge/godoc-GoFPDF-blue.svg)](https://pkg.go.dev/github.com/jung-kurt/gofpdf)
 
-![](https://raw.githubusercontent.com/jung-kurt/gofpdf/master/image/logo_gofpdf.jpg)
+![](https://github.com/jung-kurt/gofpdf/raw/master/image/logo_gofpdf.jpg?raw=true)
 
 Package gofpdf implements a PDF document generator with high level
 support for text, drawing and images.
@@ -68,16 +68,17 @@ appreciated. Best wishes to all of you.
 
 ## Installation
 
-To install the package on your system, run
+If you currently use the $GOPATH scheme, install the package with the
+following command.
 
 ``` shell
-go get github.com/jung-kurt/gofpdf
+go get github.com/jung-kurt/gofpdf/...
 ```
 
-Later, to receive updates, run
+To test the installation, run
 
 ``` shell
-go get -u -v github.com/jung-kurt/gofpdf/...
+go test ./...
 ```
 
 ## Quick Start

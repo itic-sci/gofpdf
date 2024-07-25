@@ -1,17 +1,23 @@
+~rm~
 # GoFPDF document generator
 
-[![No Maintenance Intended][badge-no-maintain]][unmaintained]
+~m~
+[![Git Hub repository][badge-github]][github]
+[![Kurt Jung][badge-author]][jung]
+~rm~
 [![MIT licensed][badge-mit]][license]
+[![Report][badge-report]][report]
 [![GoDoc][badge-doc]][godoc]
 
-![][logo]
+~rm~
+![gofpdf](image/logo_gofpdf.jpg?raw=true "gofpdf")
 
+~rgm~
 Package gofpdf implements a PDF document generator with high level support for
 text, drawing and images.
 
 ## Features
 
-* UTF-8 support
 * Choice of measurement unit, page format and margins
 * Page header and footer management
 * Automatic page breaks, line breaks, and text justification
@@ -29,48 +35,40 @@ text, drawing and images.
 * Templates
 * Barcodes
 * Charting facility
-* Import PDFs as templates
 
 gofpdf has no dependencies other than the Go standard library. All tests pass
 on Linux, Mac and Windows platforms.
 
-gofpdf supports UTF-8 TrueType fonts and "right-to-left" languages. Note that
-Chinese, Japanese, and Korean characters may not be included in many general
-purpose fonts. For these languages, a specialized font (for example,
-[NotoSansSC][noto] for simplified Chinese) can be used.
+Like FPDF version 1.7, from which gofpdf is derived, this package does not yet
+support UTF-8 fonts. In particular, languages that require more than one code
+page such as Chinese, Japanese, and Arabic are not currently supported. This is
+explained in [issue 109][issue109]. However, support is provided to
+automatically translate UTF-8 runes to code page encodings for languages that
+have fewer than 256 glyphs.
 
-Also, support is provided to automatically translate UTF-8 runes to code page
-encodings for languages that have fewer than 256 glyphs.
+##  Installation
 
-## We Are Closed
+If you use Go modules, simply import `github.com/jung-kurt/gofpdf/v2` and
+gofpdf will be available automatically when you build your application. If you
+want to view or modify the source tree, execute the following in a directory
+that is outside of your $GOPATH.
 
-This repository will not be maintained, at least for some unknown duration. But
-it is hoped that gofpdf has a bright future in the open source world. Due to
-Go's promise of compatibility, gofpdf should continue to function without
-modification for a longer time than would be the case with many other
-languages.
-
-Forks should be based on the [last viable commit][last-commit]. Tools such as
-[active-forks][gofpdf-fork] can be used to select a fork that looks promising
-for your needs. If a particular fork looks like it has taken the lead in
-attracting followers, this README will be updated to point people in that
-direction.
-
-The efforts of all contributors to this project have been deeply appreciated.
-Best wishes to all of you.
-
-## Installation
+```shell
+git clone https://github.com/jung-kurt/gofpdf.git
+cd gofpdf
+git checkout -t origin/v2
+```
 
 If you currently use the $GOPATH scheme, install the package with the following
 command.
 
-``` shell
+```shell
 go get github.com/jung-kurt/gofpdf/...
 ```
 
 To test the installation, run
 
-``` shell
+```shell
 go test ./...
 ```
 
@@ -86,8 +84,9 @@ pdf.Cell(40, 10, "Hello, world")
 err := pdf.OutputFileAndClose("hello.pdf")
 ```
 
-See the functions in the [fpdf_test.go][fpdf-test] file (shown as examples in
-this documentation) for more advanced PDF examples.
+See the functions in the
+[fpdf_test.go][fpdf-test]
+file (shown as examples in this documentation) for more advanced PDF examples.
 
 ## Errors
 
@@ -153,24 +152,19 @@ for all examples.
 Nothing special is required to use the standard PDF fonts (courier, helvetica,
 times, zapfdingbats) in your documents other than calling `SetFont()`.
 
-You should use `AddUTF8Font()` or `AddUTF8FontFromBytes()` to add a TrueType
-UTF-8 encoded font. Use `RTL()` and `LTR()` methods switch between
-"right-to-left" and "left-to-right" mode.
-
-In order to use a different non-UTF-8 TrueType or Type1 font, you will need to
-generate a font definition file and, if the font will be embedded into PDFs, a
-compressed version of the font file. This is done by calling the MakeFont
-function or using the included makefont command line utility. To create the
-utility, cd into the makefont subdirectory and run "go build". This will
-produce a standalone executable named makefont. Select the appropriate encoding
-file from the font subdirectory and run the command as in the following
-example.
+In order to use a different TrueType or Type1 font, you will need to generate a
+font definition file and, if the font will be embedded into PDFs, a compressed
+version of the font file. This is done by calling the `MakeFont()` function or
+using the included makefont command line utility. To create the utility, cd
+into the makefont subdirectory and run `go build`. This will produce a
+standalone executable named makefont. Select the appropriate encoding file from
+the font subdirectory and run the command as in the following example.
 
 ```shell
 ./makefont --embed --enc=../font/cp1252.map --dst=../font ../font/calligra.ttf
 ```
 
-In your PDF generation code, call `AddFont()` to load the font and, as with the
+In your PDF generation code, call AddFont() to load the font and, as with the
 standard fonts, SetFont() to begin using it. Most examples, including the
 package example, demonstrate this method. Good sources of free, open-source
 fonts include [Google Fonts][gfont] and [DejaVu Fonts][dfont].
@@ -244,23 +238,21 @@ the internal catalogs were not sorted stably. Paul Montag added encoding and
 decoding functionality for templates, including images that are embedded in
 templates; this allows templates to be stored independently of gofpdf. Paul
 also added support for page boxes used in printing PDF documents. Wojciech
-Matusiak added supported for word spacing. Artem Korotkiy added support of
-UTF-8 fonts. Dave Barnes added support for imported objects and templates.
-Brigham Thompson added support for rounded rectangles. Joe Westcott added
-underline functionality and optimized image storage. Benoit KUGLER contributed
-support for rectangles with corners of unequal radius, modification times, and
-for file attachments and annotations.
+Matusiak added supported for word spacing.
 
 ## Roadmap
 
-* Remove all legacy code page font support; use UTF-8 exclusively
+* Handle UTF-8 source text natively. Until then, automatic translation of
+UTF-8 runes to code page bytes is provided.
 * Improve test coverage as reported by the coverage tool.
 
+
+~mr~
 [badge-author]: https://img.shields.io/badge/author-Kurt_Jung-blue.svg
 [badge-doc]: https://img.shields.io/badge/godoc-GoFPDF-blue.svg 
 [badge-github]: https://img.shields.io/badge/project-Git_Hub-blue.svg
 [badge-mit]: https://img.shields.io/badge/license-MIT-blue.svg
-[badge-no-maintain]: http://unmaintained.tech/badge.svg
+[badge-report]: https://goreportcard.com/badge/github.com/jung-kurt/gofpdf
 [badge-status]: https://travis-ci.org/jung-kurt/gofpdf.svg?branch=master
 [coverage]: https://blog.golang.org/cover
 [dfont]: http://dejavu-fonts.org/
@@ -270,17 +262,13 @@ for file attachments and annotations.
 [fpdf-test]: https://github.com/jung-kurt/gofpdf/blob/master/fpdf_test.go
 [gfont]: https://fonts.google.com/
 [github]: https://github.com/jung-kurt/gofpdf
-[godoc]: https://pkg.go.dev/github.com/jung-kurt/gofpdf
-[gofpdf-fork]: https://techgaun.github.io/active-forks/index.html#jung-kurt/gofpdf
+[godoc]: https://godoc.org/github.com/jung-kurt/gofpdf
 [issue109]: https://github.com/jung-kurt/gofpdf/issues/109
 [jung]: https://github.com/jung-kurt/
-[last-commit]: https://github.com/jung-kurt/gofpdf/commit/603f56990463f011cb1dbb64ef7f872c1adc009a
 [license]: https://raw.githubusercontent.com/jung-kurt/gofpdf/master/LICENSE
 [lint]: https://github.com/golang/lint
-[logo]: https://github.com/jung-kurt/gofpdf/raw/master/image/logo_gofpdf.jpg?raw=true
-[noto]: https://github.com/jsntn/webfonts/blob/master/NotoSansSC-Regular.ttf
 [pr]: https://help.github.com/articles/using-pull-requests/
+[report]: https://goreportcard.com/report/github.com/jung-kurt/gofpdf
 [status]: https://travis-ci.org/jung-kurt/gofpdf
 [test]: https://github.com/jung-kurt/gofpdf/blob/master/fpdf_test.go
-[unmaintained]: http://unmaintained.tech/
 [vet]: https://golang.org/cmd/vet/
