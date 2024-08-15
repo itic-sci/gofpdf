@@ -2665,6 +2665,8 @@ func (f *Fpdf) MultiCell(w, h float64, txtStr, borderStr, alignStr string, fill 
 	ls := 0
 	ns := 0
 	nl := 1
+	// enBool连续英文换行用的，为了尽最大可能把英文单词放在一行
+	enBool := false
 	for i < nb {
 		// Get next character
 		var c rune
@@ -2704,10 +2706,16 @@ func (f *Fpdf) MultiCell(w, h float64, txtStr, borderStr, alignStr string, fill 
 			}
 			continue
 		}
-		if c == ' ' || isChinese(c) {
+		if c == ' ' || !isEnglish(c) {
 			sep = i
 			ls = l
 			ns++
+			enBool = false
+		} else {
+			if !enBool {
+				sep += 1
+			}
+			enBool = true
 		}
 		if int(c) >= len(cw) {
 			f.err = fmt.Errorf("character outside the supported range: %s", string(c))
@@ -2743,6 +2751,9 @@ func (f *Fpdf) MultiCell(w, h float64, txtStr, borderStr, alignStr string, fill 
 					f.outf("%.3f Tw", f.ws*f.k)
 				}
 				if f.isCurrentUTF8 {
+					if j == sep {
+						sep = i
+					}
 					f.CellFormat(w, h, string(srune[j:sep]), b, 2, alignStr, fill, 0, "")
 				} else {
 					f.CellFormat(w, h, s[j:sep], b, 2, alignStr, fill, 0, "")

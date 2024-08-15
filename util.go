@@ -453,6 +453,17 @@ func isChinese(rune2 rune) bool {
 	return false
 }
 
+// 是否是26个英文字母
+func isEnglish(rune2 rune) bool {
+	if rune2 >= rune(0x0041) && rune2 <= rune(0x005A) {
+		return true
+	}
+	if rune2 >= rune(0x0061) && rune2 <= rune(0x007A) {
+		return true
+	}
+	return false
+}
+
 // Condition font family string to PDF name compliance. See section 5.3 (Names)
 // in https://resources.infosecinstitute.com/pdf-file-format-basic-structure/
 func fontFamilyEscape(familyStr string) (escStr string) {
