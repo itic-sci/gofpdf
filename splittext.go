@@ -2,8 +2,6 @@ package gofpdf
 
 import (
 	"math"
-	//	"strings"
-	"unicode"
 )
 
 // SplitText splits UTF-8 encoded text into several lines using the current
@@ -23,28 +21,36 @@ func (f *Fpdf) SplitText(txt string, w float64) (lines []string) {
 	i := 0
 	j := 0
 	l := 0
+	enBool := false // 判断是否是连续英文，连续英文sep停留不动
 	for i < nb {
 		c := s[i]
 		l += cw[c]
-		if unicode.IsSpace(c) || isChinese(c) {
+
+		// 非英文，只有全英文的时候sep才等于-1
+		if !isEnglish(c) {
 			sep = i
-		}
-		if c == '\n' || l > wmax {
-			if sep == -1 {
-				if i == j {
-					i++
-				}
+			enBool = false
+		} else {
+			if !enBool {
 				sep = i
-			} else {
-				if isChinese(c) {
-					i = sep
-				} else {
-					i = sep + 1
-				}
 			}
-			lines = append(lines, string(s[j:sep]))
+			enBool = true
+		}
+
+		if c == '\n' || l > wmax {
+			// 字符串长度大于行的长度了，要换行
+			if sep == -1 {
+				// 全是英文正常换行
+				lines = append(lines, string(s[j:i]))
+				j = i
+			} else {
+				// 包含中文，为了把英文单词放在一起
+				lines = append(lines, string(s[j:sep]))
+				// 换完行之后，指针移动
+				j = sep
+				i = sep
+			}
 			sep = -1
-			j = i
 			l = 0
 		} else {
 			i++
