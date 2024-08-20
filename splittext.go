@@ -2,6 +2,7 @@ package gofpdf
 
 import (
 	"math"
+	"strings"
 )
 
 // SplitText splits UTF-8 encoded text into several lines using the current
@@ -17,12 +18,13 @@ func (f *Fpdf) SplitText(txt string, w float64) (lines []string) {
 		nb--
 	}
 	s = s[0:nb]
-	sep := -1
 	i := 0
 	j := 0
+	sep := -1
 	l := 0
-	enBool := false // 判断是否是连续英文，连续英文sep停留不动
+	enBool := true // 判断是否是连续英文，连续英文sep停留不动
 	for i < nb {
+
 		c := s[i]
 		l += cw[c]
 
@@ -38,26 +40,43 @@ func (f *Fpdf) SplitText(txt string, w float64) (lines []string) {
 		}
 
 		if c == '\n' || l > wmax {
-			// 字符串长度大于行的长度了，要换行
+			// l > wmax 字符串长度大于行的长度了，要换行
+			// j是每一行start索引，sep是end索引，j<= lines < sep
 			if sep == -1 {
-				// 全是英文正常换行
-				lines = append(lines, string(s[j:i]))
-				j = i
-			} else {
-				// 包含中文，为了把英文单词放在一起
-				lines = append(lines, string(s[j:sep]))
-				// 换完行之后，指针移动
-				j = sep
-				i = sep
+				// sep = -1说明这一行写的全是英文
+				sep = i
 			}
+
+			if j != sep {
+				_addLines(&lines, string(s[j:sep]))
+			} else {
+				// j==sep时，说明是\n导致的，跳过该字符
+				sep++
+			}
+
+			// 每一行写完要重置变量
+			i, j = sep, sep
 			sep = -1
 			l = 0
+			enBool = true // 判断是否是连续英文，连续英文sep停留不动
 		} else {
 			i++
 		}
 	}
 	if i != j {
-		lines = append(lines, string(s[j:i]))
+		_addLines(&lines, string(s[j:i]))
 	}
 	return lines
+}
+
+func _addLines(lines *[]string, line string) {
+	// 如果整行等于一个空格
+	if line != " " {
+		if len(*lines) > 0 {
+			// 首行缩进的空格保留，其它行的首尾空格去掉
+			line = strings.Trim(line, " ")
+		}
+		//fmt.Println(line)
+		*lines = append(*lines, line)
+	}
 }
